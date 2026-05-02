@@ -10,35 +10,33 @@ import se.kth.iv1350.repairelectricbike.model.dto.CustomerDTO;
 import se.kth.iv1350.repairelectricbike.model.dto.RepairOrderDTO;
 
 import java.util.List;
-//Vad som behöver fixas:RegistryCreator.java, behvöer skrivas om (se kod) och
-//RepairOrderRegistry.java, behöver också skrivas om, den anropar RepairOrderDTO med fel argument; behöver en getDate(),
-//RepairOrder.java saknar också getDate().
-
-//Har också kommentarer att skriva till för @params och @returns
+/**
+ * Handles all system operations and coordinates communication between the view, model and integration layers.
+ */
 public class Controller {
 
-    //Håller koll på den nuvarande reparationsordern som är aktiv
     private RepairOrder currentRepairOrder;
         
     private final CustomerRegistry customerRegistry;
     private final RepairOrderRegistry repairOrderRegistry;
     private final Printer printer;
     
-    private int nextOrderId = 1; //Räknare för att ge reparationdorder unikt ID
+    private int nextOrderId = 1; 
     /**
-     * Creates a new controller.
-     * @param registryCreator
-     * @param printer
+     * Creates a new controller instance and initializes the required registries.
+     *
+     * @param registryCreator Provides access to the customer and repair order registries.
+     * @param printer Handles printing of repair order information.
      */
     public Controller(RegistryCreator registryCreator, Printer printer){
-        this.customerRegistry = registryCreator.getCustomerRegistry(); //getCustomerRegistry behöver läggas till  i RegistryCreator.java
+        this.customerRegistry = registryCreator.getCustomerRegistry(); 
         this.repairOrderRegistry = registryCreator.getRepairOrderRegistry(); //getRepairOrderRegistry behöver läggas till  i RegistryCreator.java
         this.printer = printer;
     }
 
     /**
      * Searches for a customer in the customer registry using their phone number.
-     * @param phoneNumber
+     * @param phoneNumber The phone number of the customer to find.
      * @return CustomerDTO with customer information, or null if customer is not found
      */
     public CustomerDTO findCustomer(String phoneNumber) {
@@ -47,9 +45,9 @@ public class Controller {
 
     /**
      * Creates a new repair order and saves it to registry.
-     * @param problemDescr
-     * @param phoneNumber
-     * @param serialNo
+     * @param problemDescr A description of the problem reported by the customer.
+     * @param phoneNumber The phone number of the customer.
+     * @param serialNo The serial number of the bike to be repaired.
      */
     public void createRepairOrder(String problemDescr, String phoneNumber, int serialNo){
         currentRepairOrder = new RepairOrder(nextOrderId++, problemDescr);
@@ -57,7 +55,7 @@ public class Controller {
     }
 
     /**
-     * Returns all stored repair orders
+     * Returns all currently stored repair orders
      * @return List of RepairOrderDTO representing all repair orders in the registry
      */
     public List<RepairOrderDTO> findAllRepairOrders(){
@@ -66,7 +64,7 @@ public class Controller {
 
     /**
      * Accepts a repair order by changing its state to "ACCEPTED" and updates it in the registry.
-     * @param id
+     * @param id The ID of the repair order to accept.
      */
     public void acceptRepairOrder(int id){
         if(currentRepairOrder != null && currentRepairOrder.getId() == id){
@@ -78,7 +76,7 @@ public class Controller {
 
     /**
      * Rejects a repair order by changing its state to "REJECTED" and updates it in the registry.
-     * @param id
+     * @param id The ID of the repair order to reject
      */
     public void rejectRepairOrder(int id){
         if(currentRepairOrder != null && currentRepairOrder.getId() == id){
@@ -89,8 +87,8 @@ public class Controller {
 
     /**
      * Adds a diagnostic result to the current repair order and updates it in the registry.
-     * @param id
-     * @param result
+     * @param id The ID of the repair order to update.
+     * @param result The diagnostic result to add.
      */
     public void addDiagnosticResult(int id, String result){
         if(currentRepairOrder != null && currentRepairOrder.getId() == id){
@@ -101,8 +99,8 @@ public class Controller {
 
     /**
      * Adds a repair task to the current repair order and updates it in the registry.
-     * @param id
-     * @param task
+     * @param id The ID of the repair order to update.
+     * @param task A description of the repair task to add.
      */
     public void addRepairTask(int id, String task){
         if(currentRepairOrder != null && currentRepairOrder.getId() == id){

@@ -1,5 +1,8 @@
 package se.kth.iv1350.repairelectricbike.model;
 
+/**
+ * Represents a customer and the bike associated with their repair order.
+ */
 public class Customer {
     private  String name;
     private  String email;
